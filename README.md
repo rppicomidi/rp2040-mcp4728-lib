@@ -2,11 +2,13 @@
 C++ library for the RP2040 and the MCP4728 4-channel DAC + example code
 
 This driver implements all of the I2C functions the MCP4728 supports.
-There is no API for toggling the LDAC pin or polling the RDY/BSY\ pin.
-There are two excpetions to this: read I2C address and write I2C address.
+There is an API for toggling the LDAC pin if it is used, but none for
+or polling the RDY/BSY\ pin.
+Use of the LDAC\ pin is optional unless your software needs to
+read the MCP4728 I2C address or reprogram the MCP4728 I2C address.
 Those functions require timing the LDAC\ pin against the I2C clock. The
 `rppicomidi::RP2040_MCP4728::access_addr_bits()` function supports these
-two execptions. So unless you are reading and writing the I2C address
+two functions. So unless you are reading and writing the I2C address
 bits on the MCP4728 chip, you can implement a complete system with
 just the I2C SCL and SDA pins. See the MCP4728 data sheet for more
 information.
