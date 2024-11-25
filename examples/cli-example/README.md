@@ -160,10 +160,11 @@ If the MCP4728 VCC is 5V, then the circuit must buffer the 3.3V RP2040 GPIO outp
 to a 5V logic level; the LDAC signal uses CMOS signaling levels, not TTL. Once the
 hardware is set up correctly
 
-1. Configure the software build as described above to set the desired final I2C address
-   for each MCP4728 device using the `MCP4728_ADDR[0-7]` option
+1. Configure the software build as described above to set the number of
+   MCP4728 chips in the system with the `NUM_MCP4728` option
 2. Configure the software build as described above to set the RP2040 GPIO pin wired
-   to each MCP4728 device using the `MCP4728_LDAC[0-7]` option
+   to each MCP4728 device using the `MCP4728_LDAC[0-7]` option. If any other
+   differences from default are required, use the other options, too.
 3. Build the software and load it to the Pico board or other RP2040 board
 4. Start a terminal program and verify the CLI is working properly by entering
    the `help` command.
@@ -182,11 +183,19 @@ device # 1. It will have I2C addres 0x61. Its LDAC pin is wired to
 RP2040 GPIO pin 7. The I2C bus will run at 400kbps.
 
 The I2C port, port pins, baud rate, and I2C addresses are the
-defaults. From the command line, you can build the software like this
+defaults. From the command line, you can build the software from a build
+directory. For example, if the current directory contains this example file,
+```
+mkdir build
+cd build
+```
+Now that the current directory is the build directory, generate the makefile
+and build:
 ```
 cmake -DNUM_MCP4728=2 -DMCP4728_LDAC0=6 -DMCP4728_LDAC1=7 ..
 make
 ```
+The `.uf2` file is in the `build` directory.
 
 To program the device # 1 I2C address, use the following sequence
 of CLI commands
