@@ -4,13 +4,13 @@ This program implements a serial port terminal command line interface (CLI)
 that exercises all of the features of one or more I2C-connected MCP4728 chips.
 The CLI uses the wonderful [embedded-cli](https://github.com/funbiscuit/embedded-cli)
 library by Sviatoslav Kokurin (funbiscuit). Both the UART serial port and the
-USB Device CDC serial port is supported.
+USB Device CDC serial port are supported.
 
 To access the CLI, you will need a serial terminal. If you are using VS Code
 and have the Serial Monitor extension installed, set the terminal mode
 to On by Clicking the Toggle Terminal Mode button. If you prefer an external
-terminal program, on Linux or Mac, use something like `minicom` and on Windows,
-use `PuTTY` or `Teraterm`.
+terminal program, on Linux or Mac, you can use something like `minicom`. On Windows,
+you use something like `PuTTY` or `Teraterm`.
 
 Type help for a list of commands. You can use the Tab key to complete commands.
 The Up and Down arrow recall previous commands and you can use the left and right
@@ -32,7 +32,7 @@ and SCL pins through two BSS138 FET buffers on one [Adafruit 4-channel
 I2C-safe Bi-directional Logic Level Converter - BSS138](https://www.adafruit.com/product/757)
 board. The LDAC pins I had to buffer through two buffers of a 74HCT244 chip;
 The other two buffers on the Adafruit Bi-directional Logic Level Converter were
-not happy fighting agains the pulldown resistor on each LDAC pin on the
+not happy fighting against the pulldown resistor on each LDAC pin on the
 MCP4728 board.
 
 # Software
@@ -80,9 +80,9 @@ code, or you can pass parameters to the cmake command, or you can set your
 command line environment variables before doing a build or before launching
 VS Code.
 
-The following cmake Configure Args defines are supported; pass them to
+The following cmake defines are supported; pass them to
 CMake command line with the `-D` prefix; omit the `-D` prefix if you
-are setting the Configure Args using the shell environment.
+are setting the configuration using the shell environment.
 
 ```
 # Define the number of MCP4728 chips wired to the same I2C port. Can be 1-8
@@ -114,9 +114,8 @@ cmake -DNUM_MCP4728=2 -DMCP4728_I2C=i2c0 -DMCP4728_I2C_SDA=8 -DMCP4728_I2C_SCL=9
 make
 ```
 
-To set up your build environment and then launch VS Code, try this sequence of commands from the Git Bash terminal
-following by using the `Configure CMake` and `Compile Project` buttons in the Raspberry Pi Pico plugin Quick Access
-menu accomplishes the same thing.
+To set up your build environment as above and then launch VS Code, try this sequence of commands from the Linux or Mac
+Terminal, or the Windows Git Bash terminal. Then push the `Configure CMake` and `Compile Project` buttons in the Raspberry Pi Pico plugin Quick Access to build your project.
 ```
 export NUM_MCP4728=2
 export MCP4728_I2C=i2c0
@@ -130,7 +129,7 @@ code
 ## Using the CLI
 
 At the time this document was created the following serial port commands
-are supported and are displayed when you type `help`.
+are supported and are displayed on your serial port terminal when you type `help`.
 
 ```
  * help
@@ -194,7 +193,7 @@ hardware is set up correctly
    device and to tell the driver software the current I2C address.
 
 
-For a example consider a system wired as follows. It has 2 MCP4728
+For example, consider a system wired as follows. It has 2 MCP4728
 devices wired to the I2C1 port on RP2040 GPIO pins 2 and 3. The
 first MCP4728 device is device # 0. It will have address 0x60. Its
 LDAC pin is wired to RP2040 GPIO pin 6. The second MCP4728 device is
@@ -202,19 +201,13 @@ device # 1. It will have I2C addres 0x61. Its LDAC pin is wired to
 RP2040 GPIO pin 7. The I2C bus will run at 400kbps.
 
 The I2C port, port pins, baud rate, and I2C addresses are the
-defaults. From the command line, you can build the software from a build
-directory. For example, if the current directory contains this example file,
-```
-mkdir build
-cd build
-```
-Now that the current directory is the build directory, generate the makefile
-and build:
+defaults. From the command line, you can build the software from the `build`
+directory.
+
 ```
 cmake -DNUM_MCP4728=2 -DMCP4728_LDAC0=6 -DMCP4728_LDAC1=7 ..
 make
 ```
-The `.uf2` file is in the `build` directory.
 
 To program the device # 1 I2C address, use the following sequence
 of CLI commands
