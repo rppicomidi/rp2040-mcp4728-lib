@@ -1,7 +1,7 @@
 # rp2040-mcp4728-lib
 C++ library for the RP2040 and the MCP4728 4-channel DAC + example code
 
-This driver implements all of the I2C functions the MCP4728 supports.
+The `rp2040-mcp4728-lib` implements all of the I2C functions the MCP4728 supports.
 There is an API for toggling the LDAC pin if it is used, but none for
 or polling the RDY/BSY\ pin.
 Use of the LDAC\ pin is optional unless your software needs to
@@ -26,7 +26,14 @@ software-controlled bit-banging. It does not use PIO resources because
 that function is likely to be called only during board bringup on systems
 that require an I2C address other than factory standard.
 
+The `rp2040-mcp4728-cli-lib` implements a command line interface (CLI) for
+testing all of the functions in the `rp2040-mcp4728-lib`. It uses the
+wonderful embedded-cli library by Sviatoslav Kokurin (funbiscuit), which
+must be initialized and included in the build of whatever project uses
+it. If your project does not need a CLI, there is no need to use it.
+
 Example code is found in the `examples` directory.
 Each example's code is described in the README.md file contained in each
 example's directory. At the time of this writing, there is only one
-example: a CLI-driven program that exercises all of the features of this driver.
+example: a CLI-driven program that exercises all of the features of both
+`rp2040-mcp4728-lib` and `rp2040-mcp4728-cli-lib`.
