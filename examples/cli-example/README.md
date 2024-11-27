@@ -35,6 +35,10 @@ The other two buffers on the Adafruit Bi-directional Logic Level Converter were
 not happy fighting against the pulldown resistor on each LDAC pin on the
 MCP4728 board.
 
+The rough schematic for the 5V VCC version with two MCP4728 boards as described
+above is in the schematic directory. Bypass capacitors and the circuit for the 5V analog
+supply are not shown.
+
 # Software
 
 ## Building
@@ -243,3 +247,6 @@ contribute code, please file issues and pull requests on GitHub.
 I pay attention to them.
 
 Enjoy.
+
+
+[assets/mcp4728-cli.svg]: asssets/mcp4728-cli-example.svg
