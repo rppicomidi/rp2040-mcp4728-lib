@@ -2,12 +2,15 @@
 
 This program implements a serial port terminal command line interface (CLI)
 that exercises all of the features of one or more I2C-connected MCP4728 chips.
-The CLI uses the wonderful `embedded-cli` library by Sviatoslav Kokurin (funbiscuit).
-Either the UART serial port or the USB Device CDC serial port is supported. Please
-use a real serial port program instead of the "Serial Monitor" inside VS Code. On
-Linux or Mac, use something like `minicom` and on Windows, use `PuTTY` or `Teraterm`.
-Real terminals work better with the `embedded-cli` library. See the GitHub
-repo for [here](https://github.com/funbiscuit/embedded-cli) for more details.
+The CLI uses the wonderful [embedded-cli](https://github.com/funbiscuit/embedded-cli)
+library by Sviatoslav Kokurin (funbiscuit). Both the UART serial port and the
+USB Device CDC serial port is supported.
+
+To access the CLI, you will need a serial terminal. If you are using VS Code
+and have the Serial Monitor extension installed, set the terminal mode
+to On by Clicking the Toggle Terminal Mode button. If you prefer an external
+terminal program, on Linux or Mac, use something like `minicom` and on Windows,
+use `PuTTY` or `Teraterm`.
 
 Type help for a list of commands. You can use the Tab key to complete commands.
 The Up and Down arrow recall previous commands and you can use the left and right
@@ -43,12 +46,29 @@ git clone https://github.com/rppicomidi/rp2040-mcp4728-lib.git
 git submodule update --recursive --init
 ```
 
-The code depends on Pico-SDK 2.0. I have tested it using the official VS Code
-extension for Raspberry Pi Pico developement. You should be able to load this
-project directly to VS Code and build it if you have the extension installed.
+The code was tested with Pico-SDK 2.0 and 2.1. I have tested it using the official
+VS Code extension for Raspberry Pi Pico developement. You should be able to load this
+project directly to VS Code and build it if you have the extension installed. See
+the [Getting started guide](https://datasheets.raspberrypi.com/pico/getting-started-with-pico.pdf).
 
-For those of you who build on the command line, please use the usual command sequence.
-Be sure to export your `PICO_SDK_PATH` so the make system can find the Pico SDK.
+To build on the command line, you will need to create a build directory and
+export the path the `pico-sdk`. For example, if the `rp2040-mcp4728-lib`
+directory is a sub-directory of `${PROJ_DIR}` and your `pico-sdk` is
+stored in `${PROJ_DIR}/pico-sdk`, and your target board is a Raspberry Pi Pico,
+then you need to use the following commands
+```
+export PICO_BOARD=pico
+export PICO_SDK_PATH=${PROJ_DIR}/pico-sdk
+cd ${PROJ_DIR}/rp2040-mcp4728-lib/examples/cli-example
+mkdir build
+cd build
+```
+
+From the `build` directory, you can get the default build with these commands
+```
+cmake ..
+make
+```
 
 By default, this software compiles assuming a single MCP4728 chip at address 0x60
 with LDAC pin unwired on port I2C1 through RP2040 GPIO pins 2 and 3 at 400kbps.
@@ -57,9 +77,9 @@ pins wired on either I2C0 or I2C1 with the I2C port wired through whichever
 pins on the RP2040 have the appropriate I2C function. You can change the
 configuration by editing the preprocessor define statments in the `cli-example.cpp`
 code, or you can pass parameters to the cmake command, or you can set your
-command line environment variables before doing a build. For those using
-MS Visual Studio Code, you can set the CMake configuration in the Build
-`Settings` pane `Workspace` tab under the `CMake:Configure Args` heading.
+command line environment variables before doing a build or before launching
+VS Code.
+
 The following cmake Configure Args defines are supported; pass them to
 CMake command line with the `-D` prefix; omit the `-D` prefix if you
 are setting the Configure Args using the shell environment.
@@ -94,7 +114,9 @@ cmake -DNUM_MCP4728=2 -DMCP4728_I2C=i2c0 -DMCP4728_I2C_SDA=8 -DMCP4728_I2C_SCL=9
 make
 ```
 
-To accomplish the same thing by setting up your Linux command line environment
+To set up your build environment and then launch VS Code, try this sequence of commands from the Git Bash terminal
+following by using the `Configure CMake` and `Compile Project` buttons in the Raspberry Pi Pico plugin Quick Access
+menu accomplishes the same thing.
 ```
 export NUM_MCP4728=2
 export MCP4728_I2C=i2c0
@@ -102,51 +124,48 @@ export MCP4728_I2C_SDA=8
 export MCP4728_I2C_SCL=9
 export MCP4728_LDAC0=10
 export MCP4728_LDAC1=11
-cmake ..
-make
+code
 ```
 
 ## Using the CLI
 
 At the time this document was created the following serial port commands
-are supported and are displayed when you type `help`. As noted above, the
-CLI works better on a real serial port terminal; a "serial monitor" in
-an IDE may disappoint you.
+are supported and are displayed when you type `help`.
 
 ```
  * help
         Print list of commands
- * multi-write
-        Configure the DAC channel(s); use multi_write cmd with no args for usage
- * fast-write
-        Write DAC code and PD value to all 4 channels; use fast_write cmd with no args for usage
- * read
-        Read and print DAC channel information; use read cmd with no args for usage
- * status
+ * dac-multi-write
+        Configure the DAC channel(s); use dac-multi_write cmd with no args for usage
+ * dac-fast-write
+        Write DAC code and PD value to all 4 channels; use dac-fast_write cmd with no args for usage
+ * dac-read
+        Read and print DAC channel information; use dac-read cmd with no args for usage
+ * dac-status
         Print the Ready/Busy status and the powered-on status
- * write-eeprom
-        Configure DAC registers and program EEPROM to match; use write-eeprom with no args for usage
- * save
+ * dac-write-eeprom
+        Configure DAC registers and program EEPROM to match; use dac-write-eeprom with no args for usage
+ * dac-save
         Save the current DAC configuration to EEPROM
- * set-gains
-        Configure DAC gain registers for all 4 channels at once; use set-gains with no args for usage
- * set-vrefs
-        Configure DAC Vref registers for all 4 channels at once; use set-vrefs with no args for usage
- * set-pds
-        Configure DAC PD registers for all 4 channels at once; use set-pds with no args for usage
- * reset
+ * dac-set-gains
+        Configure DAC gain registers for all 4 channels at once; use dac-set-gains with no args for usage
+ * dac-set-vrefs
+        Configure DAC Vref registers for all 4 channels at once; use dac-set-vrefs with no args for usage
+ * dac-set-pds
+        Configure DAC PD registers for all 4 channels at once; use dac-set-pds with no args for usage
+ * dac-reset
         Send General Call Reset to all I2C devices on the bus
- * wakeup                                                                                                                                                        
-        Send General Call Wakeup to all I2C devices on the bus. Sets PD to 0 all channels.                                                                       
- * update                                                                                                                                                        
-        Send General Call Software Update to all I2C devices on the bus. Updates all DAC outputs at the same time                                                
- * select-dac                                                                                                                                                    
-        Set the DAC chip to access                                                                                                                               
- * set-ldac                                                                                                                                                      
-        Set the logic level for the LDAC signal                                                                                                                  
- * read-addr                                                                                                                                                     
-        Use LDAC and general call read address bits command to read the I2C address bits from the DAC                                                            
- * write-addr                                                                                                                                                    
+ * dac-wakeup
+        Send General Call Wakeup to all I2C devices on the bus. Sets PD to 0 all channels.
+ * dac-update
+        Send General Call Software Update to all I2C devices on the bus. Updates all DAC outputs at the same time
+ * dac-select
+        Set the DAC chip to access
+ * dac-set-ldac
+        Set the logic level for the LDAC signal
+ * dac-read-addr
+        Use LDAC and general call read address bits command to read the I2C address bits from the DAC
+ * dac-write-addr
         Use LDAC and write address bits command to write new the I2C address bits to the DAC 
 ```
 ## Changing the I2C address
