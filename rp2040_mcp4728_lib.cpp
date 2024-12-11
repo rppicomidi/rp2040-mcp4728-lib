@@ -24,12 +24,15 @@
  */
 #include "rp2040_mcp4728_lib.h"
 #include <cstring> // for memset
-rppicomidi::RP2040_MCP4728::RP2040_MCP4728(uint16_t addr_, Rp2040_i2c_bus* bus_, uint ldac_) : RP2040_i2c_device(addr_, bus_), ldac_gpio{ldac_}, release_bus_pending{false}
+rppicomidi::RP2040_MCP4728::RP2040_MCP4728(uint16_t addr_, Rp2040_i2c_bus* bus_, uint ldac_, bool ldac_invert_) : RP2040_i2c_device(addr_, bus_), ldac_gpio{ldac_}, release_bus_pending{false}
 {
     memset(&app_callbacks, 0, sizeof(app_callbacks));
     memset(read_data, 0, sizeof(read_data));
     if (ldac_gpio != no_ldac_gpio) {
         gpio_init(ldac_gpio);
+        if (ldac_invert_) {
+            gpio_set_outover(ldac_gpio, GPIO_OVERRIDE_INVERT);
+        }
         gpio_put(ldac_gpio, true); // set LDAC\ high
         gpio_set_dir(ldac_gpio, true); // make it an output
     }

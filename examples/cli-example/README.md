@@ -30,8 +30,8 @@ second MCP4728 board, I wired pin 10 (GPIO 7) to the LDAC pin of the 2nd board.
 I also tested this powering the MCP4728 boards with 5V VCC. I buffered the I2C SDA
 and SCL pins through two BSS138 FET buffers on one [Adafruit 4-channel
 I2C-safe Bi-directional Logic Level Converter - BSS138](https://www.adafruit.com/product/757)
-board. The LDAC pins I had to buffer through two buffers of a 74HCT244 chip;
-The other two buffers on the Adafruit Bi-directional Logic Level Converter were
+board. The LDAC pins I had to buffer through a 74HCTG04 dual inverter buffer;
+the other two buffers on the Adafruit Bi-directional Logic Level Converter were
 not happy fighting against the pulldown resistor on each LDAC pin on the
 MCP4728 board.
 
@@ -107,6 +107,11 @@ MCP4728_ADDR[0-7]=[0x60-0x67]
 # Note that by default, all MCP4728 are assumed to have no LDAC pin connected, so
 # are defined as rppicomidi::RP2040_MCP4728::no_ldac_gpio
 MCP4728_LDAC[0-7]=[RP2040 GPIO number or rppicomidi::RP2040_MCP4728::no_ldac_gpio]
+# Define whether the LDAC output pins are wired to an external inverting buffer
+# before connection to the MCP4728. The default is false; that is, each LDAC GPIO pin
+# is either directly wired to the corresponding MCP4728 LDAC input, or the signal
+# is buffered through a non-inverting buffer.
+MCP4728_INVERT_LDAC=[false|true]
 ```
 For example, to build with 2 MCP4728 chips on I2C0 routed to RP2040 GPIO 8 and 9 with
 LDAC pins on GPIO 10 and 11, and all other options default, you can use the folliwng
@@ -202,14 +207,15 @@ devices wired to the I2C1 port on RP2040 GPIO pins 2 and 3. The
 first MCP4728 device is device # 0. It will have address 0x60. Its
 LDAC pin is wired to RP2040 GPIO pin 6. The second MCP4728 device is
 device # 1. It will have I2C addres 0x61. Its LDAC pin is wired to
-RP2040 GPIO pin 7. The I2C bus will run at 400kbps.
+RP2040 GPIO pin 7. Both LDAC pins are wired through an inverting buffer.
+The I2C bus will run at 400kbps.
 
 The I2C port, port pins, baud rate, and I2C addresses are the
 defaults. From the command line, you can build the software from the `build`
 directory.
 
 ```
-cmake -DNUM_MCP4728=2 -DMCP4728_LDAC0=6 -DMCP4728_LDAC1=7 ..
+cmake -DNUM_MCP4728=2 -DMCP4728_LDAC0=6 -DMCP4728_LDAC1=7 -DMCP4728_INVERT_LDAC ..
 make
 ```
 

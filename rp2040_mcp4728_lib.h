@@ -52,8 +52,9 @@ public:
      * @param addr_ the 7-bit device address of the MCP4728 device (usually 0x60)
      * @param bus_ a pointer to the Rp2040_i2c_bus to which this MCP4728 device is attached
      * @param ldac_ is the GPIO number of the LDAC pin or no_ldac_gpio if LDAC is not connected.
+     * @param ldac_invert_ is true if the LDAC\ GPIO control has an external inverting buffer.
      */
-    RP2040_MCP4728(uint16_t addr_, Rp2040_i2c_bus* bus_, uint ldac_=no_ldac_gpio);
+    RP2040_MCP4728(uint16_t addr_, Rp2040_i2c_bus* bus_, uint ldac_=no_ldac_gpio, bool ldac_invert_=false);
 
     /**
      * poll the status of pending operations and call callback functions if needed
