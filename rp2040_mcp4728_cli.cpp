@@ -147,7 +147,7 @@ rppicomidi::RP2040_MCP4728_cli::RP2040_MCP4728_cli(EmbeddedCli* cli_, RP2040_MCP
             "dac-set-ldac",
             "Set the logic level for the LDAC signal",
             true,
-            nullptr,
+            this,
             on_set_ldac
     });
     assert(add_result);
