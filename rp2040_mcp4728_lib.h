@@ -258,6 +258,8 @@ public:
      * @return false 
      */
     bool set_ldac_pin(bool is_high);
+
+    bool has_ldac_pin() {return ldac_gpio != no_ldac_gpio; }
 protected:
     static void req_bus_callback(RP2040_i2c_device* context);
     static void fast_write_callback(RP2040_i2c_device* context);
